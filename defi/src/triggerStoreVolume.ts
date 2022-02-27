@@ -1,8 +1,6 @@
 import { wrapScheduledLambda } from "./utils/shared/wrap";
-// TODO pull dexVolumes from db
-import dexVolumes from "./protocols/dexVolumes";
 import invokeLambda from "./utils/shared/invokeLambda";
-
+import { dexVolumeMetaDb } from "./dexVolumes/dexVolumeRecords";
 function shuffleArray(array: number[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -13,6 +11,11 @@ function shuffleArray(array: number[]) {
 const step = 10;
 const handler = async () => {
   // TODO separate those that need to be called on the hour and those using graphs with timestamp
+
+  const dexVolumeMetaRes = await dexVolumeMetaDb.scan();
+
+  const dexVolumes = dexVolumeMetaRes.Items || [];
+
   const protocolIndexes = Array.from(Array(dexVolumes.length).keys());
   shuffleArray(protocolIndexes);
   for (let i = 0; i < dexVolumes.length; i += step) {
@@ -20,7 +23,7 @@ const handler = async () => {
       protocolIndexes: protocolIndexes.slice(i, i + step),
     };
 
-    // await invokeLambda(`defillama-prod-storeTvlInterval`, event);
+    await invokeLambda(`defillama-prod-storeTvlInterval`, event);
   }
 };
 

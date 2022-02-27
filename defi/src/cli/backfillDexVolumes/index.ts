@@ -32,7 +32,6 @@ import calcAllHourlyBreakdownVolume from "./calcAllHourlyBreakdownVolume";
 import calcAllMonthlyBreakdownVolume from "./calcAllMonthlyBreakdownVolume";
 
 import {
-  Ecosystem,
   EcosystemTimestampBlocks,
   DailyEcosystemRecord,
   HourlyEcosystemRecord,

@@ -46,13 +46,14 @@ const createDynamoDbApi = (TableName: string) => ({
         },
       })
       .promise(),
-  scan: () => client.scan({ TableName }).promise(),
+  scan: (params?: Omit<AWS.DynamoDB.DocumentClient.ScanInput, "TableName">) =>
+    client.scan({ TableName, ...params }).promise(),
 });
 
 export const hourlyDexVolumeDb = createDynamoDbApi("dev-hourly-dex-volume");
 export const dailyDexVolumeDb = createDynamoDbApi("dev-daily-dex-volume");
 export const monthlyDexVolumeDb = createDynamoDbApi("dev-monthly-dex-volume");
-export const DexVolumeMetaDb = createDynamoDbApi("dev-dex-volume");
+export const dexVolumeMetaDb = createDynamoDbApi("dev-dex-volume");
 
 export const getTimeDexVolumeRecord = (db: any) => (id: number, unix: number) =>
   db
@@ -74,7 +75,7 @@ export const putDexVolumeMetaRecord = ({
   module,
   name,
 }: DexVolumeMetaRecord) =>
-  DexVolumeMetaDb.put({
+  dexVolumeMetaDb.put({
     id,
     locked,
     module,
@@ -82,19 +83,20 @@ export const putDexVolumeMetaRecord = ({
   });
 
 export const getDexVolumeMetaRecord = (id: number) =>
-  DexVolumeMetaDb.query({
-    ExpressionAttributeValues: {
-      ":id": id,
-    },
-    KeyConditionExpression: "id = :id",
-  })
+  dexVolumeMetaDb
+    .query({
+      ExpressionAttributeValues: {
+        ":id": id,
+      },
+      KeyConditionExpression: "id = :id",
+    })
     .then((res: any) => res.Items?.[0])
     .catch((e: any) => {
       console.error(e);
     });
 
 export const updateLockDexVolumeRecord = (id: number, locked: boolean) =>
-  DexVolumeMetaDb.update({
+  dexVolumeMetaDb.update({
     Key: {
       id,
     },
@@ -158,7 +160,7 @@ export const putMonthlyDexVolumeRecord = ({
   });
 
 export const updateDexVolumeBackfilled = (id: number) => {
-  DexVolumeMetaDb.update({
+  dexVolumeMetaDb.update({
     Key: { id },
     UpdateExpression: "set #backfill = :b",
     ExpressionAttributeNames: { "#backfill": "backfill" },
