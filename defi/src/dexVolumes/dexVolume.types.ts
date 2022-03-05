@@ -1,4 +1,21 @@
 import { Chain } from "@defillama/sdk/build/general";
+import dexAdapters from "../../DefiLlama-Adapters/dexVolumes";
+import {
+  VolumeAdapter,
+  BreakdownAdapter,
+  DexVolumeAdapter,
+  DexBreakdownAdapter,
+} from "../../DefiLlama-Adapters/dexVolumes/dexVolume.type";
+
+export {
+  VolumeAdapter,
+  BreakdownAdapter,
+  DexVolumeAdapter,
+  DexBreakdownAdapter,
+};
+
+type DexAdapterModules = typeof dexAdapters;
+type DexAdapterModule = keyof DexAdapterModules;
 
 export type Ecosystem = Chain | "kava" | "terra";
 
@@ -65,17 +82,6 @@ export type Fetch = (
   chainBlocks: ChainBlocks
 ) => Promise<FetchResult>;
 
-export type VolumeAdapter = {
-  [x: string]: {
-    start: number | any;
-    fetch: Fetch;
-  };
-};
-
-export type BreakdownAdapter = {
-  [x: string]: VolumeAdapter 
-}
-
 export type DailyVolume = string;
 export type HourlyVolume = string;
 export type TotalVolume = string;
@@ -122,7 +128,7 @@ export type MonthlyEcosystemRecord = {
 
 export type DexVolumeMetaRecord = {
   id: number;
-  module: string;
+  module: DexAdapterModule;
   name: string;
   locked?: boolean;
 };
