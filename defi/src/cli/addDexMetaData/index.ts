@@ -24,3 +24,21 @@ export const addDexMetaData = async (
 //   module: "uniswap",
 //   name: "Uniswap",
 // });
+
+// addDexMetaData([
+//   {
+//     id: 119,
+//     module: "sushiswap",
+//     name: "SushiSwap",
+//   },
+//   {
+//     id: 311,
+//     module: "spiritswap",
+//     name: "SpiritSwap",
+//   },
+//   {
+//     id: 302,
+//     module: "spookyswap",
+//     name: "SpookySwap",
+//   },
+// ]);

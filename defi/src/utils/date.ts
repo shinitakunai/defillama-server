@@ -110,3 +110,21 @@ export function formatTimestampAsDate(timestamp: string) {
     date.getMonth() + 1
   )}/${date.getFullYear()}`;
 }
+
+export const getAllCurrTimestamps = (date = Date.now() / 1000) => {
+  const fetchCurrentHourTimestamp = getTimestampAtStartOfHour(date);
+  const savedHourTimestamp = fetchCurrentHourTimestamp - 3600;
+  const prevSavedHourTimestamp = savedHourTimestamp - 3600;
+  const dailyTimestamp = getTimestampAtStartOfDayUTC(date);
+  const startNewDailyVolume = savedHourTimestamp === dailyTimestamp;
+  const monthlyTimestamp = getTimestampAtStartOfMonth(date - 3600);
+
+  return {
+    fetchCurrentHourTimestamp,
+    savedHourTimestamp,
+    prevSavedHourTimestamp,
+    dailyTimestamp,
+    startNewDailyVolume,
+    monthlyTimestamp,
+  };
+};

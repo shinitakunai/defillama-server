@@ -20,7 +20,7 @@ const handler = async () => {
   shuffleArray(protocolIndexes);
   for (let i = 0; i < dexVolumes.length; i += step) {
     const event = {
-      protocolIndexes: protocolIndexes.slice(i, i + step),
+      dexVolumeMetas: dexVolumes.slice(i, i + step),
     };
 
     await invokeLambda(`defillama-prod-storeTvlInterval`, event);
