@@ -1,4 +1,6 @@
-import { VolumeAdapter } from "../../dexVolume.types";
+import { ChainBlocks, DexAdapter, VolumeAdapter } from "../../dexVolume.types";
+
+export const isVolume = (adapter: DexAdapter) => "volume" in adapter;
 
 export const getVolumeEcosystems = (volume: VolumeAdapter) =>
   Object.keys(volume);
@@ -17,5 +19,24 @@ export const convertVolumeNumericStart = async (
           },
         ];
       })
+    )
+  );
+
+export const getAllAdapterVolumes = async ({
+  volume,
+  timestamp,
+  chainBlocks,
+}: {
+  volume: VolumeAdapter;
+  timestamp: number;
+  module: string;
+  chainBlocks: ChainBlocks;
+}) =>
+  Object.fromEntries(
+    await Promise.all(
+      Object.entries(volume).map(async ([ecosystem, { fetch }]) => [
+        ecosystem,
+        await fetch(timestamp, chainBlocks),
+      ])
     )
   );
