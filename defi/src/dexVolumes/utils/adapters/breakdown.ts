@@ -1,5 +1,15 @@
-import { BreakdownAdapter } from "../../dexVolume.types";
-import { convertVolumeNumericStart, getVolumeEcosystems } from "./volume";
+import {
+  BreakdownAdapter,
+  ChainBlocks,
+  DexAdapter,
+} from "../../dexVolume.types";
+import {
+  convertVolumeNumericStart,
+  getAllAdapterVolumes,
+  getVolumeEcosystems,
+} from "./volume";
+
+export const isBreakdown = (adapter: DexAdapter) => "breakdown" in adapter;
 
 export const getAllBreakdownEcosystems = (
   breakdown: BreakdownAdapter
@@ -45,3 +55,21 @@ export const calcNumBreakdownFetches = (breakdown: BreakdownAdapter) =>
   Object.values(breakdown).reduce((acc: number, curr) => {
     return acc + Object.keys(curr).length;
   }, 0);
+
+export const getAllAdapterBreakdownVolumes = async ({
+  breakdown,
+  timestamp,
+  chainBlocks,
+}: {
+  breakdown: BreakdownAdapter;
+  timestamp: number;
+  chainBlocks: ChainBlocks;
+}) =>
+  Object.fromEntries(
+    await Promise.all(
+      Object.entries(breakdown).map(async ([protocolName, volume]) => [
+        protocolName,
+        await getAllAdapterVolumes({ timestamp, chainBlocks, volume }),
+      ])
+    )
+  );
