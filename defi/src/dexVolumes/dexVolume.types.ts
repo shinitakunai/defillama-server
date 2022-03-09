@@ -1,21 +1,25 @@
 import { Chain } from "@defillama/sdk/build/general";
 import dexAdapters from "../../DefiLlama-Adapters/dexVolumes";
 import {
-  VolumeAdapter,
   BreakdownAdapter,
+  ChainBlocks,
+  DexAdapter,
   DexVolumeAdapter,
   DexBreakdownAdapter,
+  VolumeAdapter,
 } from "../../DefiLlama-Adapters/dexVolumes/dexVolume.type";
 
 export {
-  VolumeAdapter,
   BreakdownAdapter,
+  ChainBlocks,
+  DexAdapter,
   DexVolumeAdapter,
   DexBreakdownAdapter,
+  VolumeAdapter,
 };
 
 type DexAdapterModules = typeof dexAdapters;
-type DexAdapterModule = keyof DexAdapterModules;
+export type DexAdapterModule = keyof DexAdapterModules;
 
 export type Ecosystem = Chain | "kava" | "terra";
 
@@ -57,10 +61,6 @@ export type HourlyEcosystemVolumes = {
 
 export type MonthlyEcosystemVolumes = {
   [x: string]: MonthlyVolumes;
-};
-
-export type ChainBlocks = {
-  [x: string]: number;
 };
 
 export type AllEcosystemVolumes = {
