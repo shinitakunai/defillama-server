@@ -7,6 +7,8 @@ import {
   DexVolumeAdapter,
   DexBreakdownAdapter,
   VolumeAdapter,
+  Fetch,
+  FetchResult,
 } from "../../DefiLlama-Adapters/dexVolumes/dexVolume.type";
 
 export {
@@ -16,6 +18,8 @@ export {
   DexVolumeAdapter,
   DexBreakdownAdapter,
   VolumeAdapter,
+  Fetch,
+  FetchResult,
 };
 
 type DexAdapterModules = typeof dexAdapters;
@@ -69,18 +73,6 @@ export type AllEcosystemVolumes = {
     startTimestamp: number;
   };
 };
-
-export type FetchResult = {
-  block?: number;
-  dailyVolume?: string;
-  totalVolume: string;
-  timestamp: number;
-};
-
-export type Fetch = (
-  timestamp: number,
-  chainBlocks: ChainBlocks
-) => Promise<FetchResult>;
 
 export type DailyVolume = string;
 export type HourlyVolume = string;
