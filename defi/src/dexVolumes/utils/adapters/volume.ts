@@ -29,7 +29,6 @@ export const getAllAdapterVolumes = async ({
 }: {
   volume: VolumeAdapter;
   timestamp: number;
-  module: string;
   chainBlocks: ChainBlocks;
 }) =>
   Object.fromEntries(
@@ -40,3 +39,6 @@ export const getAllAdapterVolumes = async ({
       ])
     )
   );
+
+export const calcNumVolumeFetches = (volume: VolumeAdapter) =>
+  Object.keys(volume).length;

@@ -1,15 +1,18 @@
 import fetch from "node-fetch";
-import { DexBreakdownAdapter, DexVolumeAdapter } from "../../dexVolume.types";
+import { DexAdapter } from "../../dexVolume.types";
 import { getAllBreakdownEcosystems } from "../adapters/breakdown";
 import { getVolumeEcosystems } from "../adapters/volume";
 
-export const getEcosystemBlocks = (ecosystem: string, timestamp: number) =>
+export const getEcosystemBlocks = (
+  ecosystem: string,
+  timestamp: number
+): Promise<{ height: number; timestamp: number }> =>
   fetch(`https://coins.llama.fi/block/${ecosystem}/${timestamp}`).then((res) =>
     res.json()
   );
 
 export const getAllEcosystemBlocks = async (
-  adapter: DexVolumeAdapter | DexBreakdownAdapter,
+  adapter: DexAdapter,
   timestamp: number
 ) => {
   let allEcosystems: string[] = [];
