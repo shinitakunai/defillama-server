@@ -1,4 +1,11 @@
-import { ChainBlocks, DexAdapter, VolumeAdapter } from "../../dexVolume.types";
+import pThrottle from "../../../utils/pThrottle";
+import {
+  ChainBlocks,
+  DexAdapter,
+  Fetch,
+  FetchResult,
+  VolumeAdapter,
+} from "../../dexVolume.types";
 
 export const isVolume = (adapter: DexAdapter) => "volume" in adapter;
 
@@ -26,19 +33,27 @@ export const getAllAdapterVolumes = async ({
   volume,
   timestamp,
   chainBlocks,
+  limit = 99,
 }: {
   volume: VolumeAdapter;
   timestamp: number;
   chainBlocks: ChainBlocks;
-}) =>
-  Object.fromEntries(
+  limit?: number;
+}): Promise<{ [x: string]: Promise<FetchResult> }> => {
+  const throttle = pThrottle({
+    limit: Math.floor(limit),
+    interval: 1050,
+  });
+
+  return Object.fromEntries(
     await Promise.all(
-      Object.entries(volume).map(async ([ecosystem, { fetch }]) => [
-        ecosystem,
-        await fetch(timestamp, chainBlocks),
-      ])
+      Object.entries(volume).map(async ([ecosystem, { fetch }]) => {
+        const throttleFetch = throttle(fetch) as Fetch;
+        return [ecosystem, await throttleFetch(timestamp, chainBlocks)];
+      })
     )
   );
+};
 
 export const calcNumVolumeFetches = (volume: VolumeAdapter) =>
   Object.keys(volume).length;

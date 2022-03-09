@@ -60,16 +60,19 @@ export const getAllAdapterBreakdownVolumes = async ({
   breakdown,
   timestamp,
   chainBlocks,
+  limit = 99,
 }: {
   breakdown: BreakdownAdapter;
   timestamp: number;
   chainBlocks: ChainBlocks;
+  limit?: number;
 }) =>
   Object.fromEntries(
     await Promise.all(
       Object.entries(breakdown).map(async ([protocolName, volume]) => [
         protocolName,
-        await getAllAdapterVolumes({ timestamp, chainBlocks, volume }),
+        // limit could theoretically not work here for super edge case of breakdown by a bunch of protocols but will leave for now
+        await getAllAdapterVolumes({ timestamp, chainBlocks, volume, limit }),
       ])
     )
   );
