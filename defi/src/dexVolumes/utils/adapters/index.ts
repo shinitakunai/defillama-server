@@ -1,15 +1,32 @@
 export * from "./breakdown";
 export * from "./volume";
 
-import { DexVolumeMetaRecord } from "../../dexVolume.types";
+import {
+  DexAdapter,
+  DexVolumeMetaRecord,
+  DexAdapterModule,
+} from "../../dexVolume.types";
 
 import dexAdapters from "../../../../DefiLlama-Adapters/dexVolumes";
 import { getAllBreakdownEcosystems } from "./breakdown";
 import { getVolumeEcosystems } from "./volume";
 import { getEcosystemBlocks } from "../blocks";
 
-export const getAllAdapters = (dexVolumeMetas: DexVolumeMetaRecord[]) =>
-  dexVolumeMetas.map(({ module }) => dexAdapters[module]);
+export const getAllAdapters = (
+  dexVolumeMetas: DexVolumeMetaRecord[]
+): DexAdapter[] => dexVolumeMetas.map(({ module }) => dexAdapters[module]);
+
+export const getAllAdaptersEntries = (
+  dexVolumeMetas: DexVolumeMetaRecord[]
+): [DexAdapterModule, DexAdapter][] =>
+  dexVolumeMetas.map(({ module }) => [module, dexAdapters[module]]);
+
+export const getAllAdaptersDict = (
+  dexVolumeMetas: DexVolumeMetaRecord[]
+): { [key in DexAdapterModule]: DexAdapter } =>
+  Object.fromEntries(
+    dexVolumeMetas.map(({ module }) => [module, dexAdapters[module]])
+  ) as { [key in DexAdapterModule]: DexAdapter };
 
 export const getAllAdapterEcosystems = (
   adapters: ReturnType<typeof getAllAdapters>
@@ -24,11 +41,16 @@ export const getAllAdapterEcosystems = (
     return [...new Set(ecosystems)];
   }, []);
 
-export const getAllAdapterBlocks = (
+export const getAllAdapterBlocks = async (
   ecosystems: string[],
   timestamp: number
-) => {
-  return Promise.all(
-    ecosystems.map((ecosystem) => getEcosystemBlocks(ecosystem, timestamp))
+): Promise<{ height: number; timestamp?: number }> => {
+  return Object.fromEntries(
+    await Promise.all(
+      ecosystems.map(async (ecosystem) => [
+        ecosystem,
+        await getEcosystemBlocks(ecosystem, timestamp),
+      ])
+    )
   );
 };
