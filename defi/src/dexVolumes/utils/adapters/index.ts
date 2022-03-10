@@ -21,6 +21,7 @@ import {
 } from "./volume";
 import { getEcosystemBlocks } from "../blocks";
 import { getAllCurrTimestamps } from "../../../utils/date";
+import { getHourlyDexVolumeRecord } from "../../dexVolumeRecords";
 
 export const getAllAdapters = (
   dexVolumeMetas: DexVolumeMetaRecord[]
@@ -113,9 +114,9 @@ export const getRecordVolumes = async ({
 };
 
 export const getAllRecordVolumes = async (
-  dexVolumeMetas: DexVolumeMetaRecord[]
+  dexVolumeMetas: DexVolumeMetaRecord[],
+  timestamp: number
 ) => {
-  const { fetchCurrentHourTimestamp } = getAllCurrTimestamps();
   const allAdapters = getAllAdapters(dexVolumeMetas);
   const numFetches = calcAllAdapterNumFetches(allAdapters);
   const allAdapterEcosystems = getAllAdapterEcosystems(allAdapters);
@@ -123,7 +124,7 @@ export const getAllRecordVolumes = async (
   const allAdapterEntries = getAllAdapterEntries(dexVolumeMetas);
   const chainBlocks = await getAllAdapterBlocks(
     allAdapterEcosystems,
-    fetchCurrentHourTimestamp
+    timestamp
   );
 
   const limit = numFetches > 99 ? Math.floor(numFetches / 10) : numFetches;
@@ -135,7 +136,7 @@ export const getAllRecordVolumes = async (
           getRecordVolumes({
             module,
             adapter,
-            timestamp: fetchCurrentHourTimestamp,
+            timestamp,
             chainBlocks,
             limit,
           })
@@ -145,3 +146,16 @@ export const getAllRecordVolumes = async (
 
   return allVolumes;
 };
+
+export const getAllPrevRecordVolumes = async (
+  dexVolumeMetas: DexVolumeMetaRecord[],
+  timestamp: number
+) =>
+  Object.fromEntries(
+    await Promise.all(
+      dexVolumeMetas.map(({ id, module }) => [
+        module,
+        getHourlyDexVolumeRecord(id, timestamp),
+      ])
+    )
+  );
