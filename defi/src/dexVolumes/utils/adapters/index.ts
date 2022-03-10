@@ -74,6 +74,44 @@ export const getAllAdapterBlocks = async (
   );
 };
 
+export const getRecordVolumes = async ({
+  module,
+  adapter,
+  timestamp,
+  chainBlocks,
+  limit = 99,
+}: {
+  module: string;
+  adapter: DexAdapter;
+  timestamp: number;
+  chainBlocks: ChainBlocks;
+  limit?: number;
+}) => {
+  if ("volume" in adapter) {
+    const { volume } = adapter;
+    return [
+      module,
+      await getAllAdapterVolumes({
+        volume,
+        timestamp,
+        chainBlocks,
+        limit,
+      }),
+    ];
+  } else {
+    const { breakdown } = adapter;
+    return [
+      module,
+      await getAllAdapterBreakdownVolumes({
+        breakdown,
+        timestamp,
+        chainBlocks,
+        limit,
+      }),
+    ];
+  }
+};
+
 export const getAllRecordVolumes = async (
   dexVolumeMetas: DexVolumeMetaRecord[]
 ) => {
@@ -83,43 +121,24 @@ export const getAllRecordVolumes = async (
   const allAdapterEcosystems = getAllAdapterEcosystems(allAdapters);
 
   const allAdapterEntries = getAllAdapterEntries(dexVolumeMetas);
-  const allAdapterBlocks = await getAllAdapterBlocks(
+  const chainBlocks = await getAllAdapterBlocks(
     allAdapterEcosystems,
     fetchCurrentHourTimestamp
   );
 
-  const throttleCap =
-    numFetches > 99 ? Math.floor(numFetches / 10) : numFetches;
+  const limit = numFetches > 99 ? Math.floor(numFetches / 10) : numFetches;
 
   const allVolumes = Object.fromEntries(
     await Promise.all(
       allAdapterEntries.map(
-        async ([module, adapter]: [DexAdapterModule, DexAdapter]) => {
-          if ("volume" in adapter) {
-            const { volume } = adapter;
-            return [
-              module,
-              await getAllAdapterVolumes({
-                volume,
-                timestamp: fetchCurrentHourTimestamp,
-                chainBlocks: allAdapterBlocks,
-                limit: throttleCap,
-              }),
-            ];
-          } else {
-            const { breakdown } = adapter;
-
-            return [
-              module,
-              await getAllAdapterBreakdownVolumes({
-                breakdown,
-                timestamp: fetchCurrentHourTimestamp,
-                chainBlocks: allAdapterBlocks,
-                limit: throttleCap,
-              }),
-            ];
-          }
-        }
+        ([module, adapter]: [DexAdapterModule, DexAdapter]) =>
+          getRecordVolumes({
+            module,
+            adapter,
+            timestamp: fetchCurrentHourTimestamp,
+            chainBlocks,
+            limit,
+          })
       )
     )
   );
