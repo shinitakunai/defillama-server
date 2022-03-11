@@ -2,6 +2,7 @@ import {
   BreakdownAdapter,
   ChainBlocks,
   DexAdapter,
+  FetchResult,
 } from "../../dexVolume.types";
 import {
   convertVolumeNumericStart,
@@ -66,7 +67,7 @@ export const getAllAdapterBreakdownVolumes = async ({
   timestamp: number;
   chainBlocks: ChainBlocks;
   limit?: number;
-}) =>
+}): Promise<{ [x: string]: Promise<FetchResult> }> =>
   Object.fromEntries(
     await Promise.all(
       Object.entries(breakdown).map(async ([protocolName, volume]) => [
