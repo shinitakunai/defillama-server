@@ -7,6 +7,7 @@ import {
   DexAdapterModule,
   ChainBlocks,
   FetchResult,
+  BreakdownHourlyEcosystemRecord,
 } from "../../dexVolume.types";
 
 import dexAdapters from "../../../../DefiLlama-Adapters/dexVolumes";
@@ -88,7 +89,7 @@ export const getRecordVolumes = async ({
   timestamp: number;
   chainBlocks: ChainBlocks;
   limit?: number;
-}): Promise<[DexAdapterModule, { [x: string]: Promise<FetchResult> }]> => {
+}): Promise<[DexAdapterModule, { [x: string]: FetchResult }]> => {
   if ("volume" in adapter) {
     const { volume } = adapter;
     return [
@@ -151,7 +152,9 @@ export const getAllRecordVolumes = async (
 export const getAllPrevRecordVolumes = async (
   dexVolumeMetas: DexVolumeMetaRecord[],
   timestamp: number
-) =>
+): Promise<{
+  [x: string]: BreakdownHourlyEcosystemRecord;
+}> =>
   Object.fromEntries(
     await Promise.all(
       dexVolumeMetas.map(async ({ id, module }) => [

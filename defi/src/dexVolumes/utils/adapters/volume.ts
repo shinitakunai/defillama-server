@@ -39,7 +39,7 @@ export const getAllAdapterVolumes = async ({
   timestamp: number;
   chainBlocks: ChainBlocks;
   limit?: number;
-}): Promise<{ [x: string]: Promise<FetchResult> }> => {
+}): Promise<{ [x: string]: FetchResult }> => {
   const throttle = pThrottle({
     limit: Math.floor(limit),
     interval: 1050,
