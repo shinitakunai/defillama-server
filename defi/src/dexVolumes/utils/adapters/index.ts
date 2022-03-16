@@ -89,17 +89,21 @@ export const getRecordVolumes = async ({
   timestamp: number;
   chainBlocks: ChainBlocks;
   limit?: number;
-}): Promise<[DexAdapterModule, { [x: string]: FetchResult }]> => {
+}): Promise<
+  [DexAdapterModule, { [x: string]: { [y: string]: FetchResult } }]
+> => {
   if ("volume" in adapter) {
     const { volume } = adapter;
     return [
       module,
-      await getAllAdapterVolumes({
-        volume,
-        timestamp,
-        chainBlocks,
-        limit,
-      }),
+      {
+        total: await getAllAdapterVolumes({
+          volume,
+          timestamp,
+          chainBlocks,
+          limit,
+        }),
+      },
     ];
   } else {
     const { breakdown } = adapter;
@@ -152,9 +156,7 @@ export const getAllRecordVolumes = async (
 export const getAllPrevRecordVolumes = async (
   dexVolumeMetas: DexVolumeMetaRecord[],
   timestamp: number
-): Promise<{
-  [x: string]: BreakdownHourlyEcosystemRecord;
-}> =>
+): Promise<BreakdownHourlyEcosystemRecord> =>
   Object.fromEntries(
     await Promise.all(
       dexVolumeMetas.map(async ({ id, module }) => [

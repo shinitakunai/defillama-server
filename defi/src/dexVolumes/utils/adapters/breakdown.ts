@@ -67,7 +67,7 @@ export const getAllAdapterBreakdownVolumes = async ({
   timestamp: number;
   chainBlocks: ChainBlocks;
   limit?: number;
-}): Promise<{ [x: string]: FetchResult }> =>
+}): Promise<{ [x: string]: { [k: string]: FetchResult } }> =>
   Object.fromEntries(
     await Promise.all(
       Object.entries(breakdown).map(async ([protocolName, volume]) => [
