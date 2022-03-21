@@ -53,9 +53,9 @@ const getVolumesFromStart = async ({
 
   const allVolumes = allVolumeRes.reduce(
     (acc: TimestampVolumes, curr: FetchResult) => {
-      const { timestamp, totalVolume } = curr;
+      const { timestamp } = curr;
       acc[timestamp] = {
-        totalVolume,
+        totalVolume: curr.totalVolume!,
       };
       return acc;
     },

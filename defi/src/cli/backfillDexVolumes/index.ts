@@ -1,4 +1,4 @@
-import * as dexAdapters from "../../../DefiLlama-Adapters/dexVolumes";
+import dexAdapters from "../../../DefiLlama-Adapters/dexVolumes";
 import { DynamoDB, AWSError } from "aws-sdk";
 import { PromiseResult } from "aws-sdk/lib/request";
 
@@ -228,9 +228,9 @@ const backfillDexVolumes = async (id: number) => {
   console.log("done");
 };
 
-backfillDexVolumes(1).catch((e) => {
-  console.log(e);
-});
+// backfillDexVolumes(468).catch((e) => {
+//   console.log(e);
+// });
 
 // TODO fill multiple protocols
 // TODO fill All protocols

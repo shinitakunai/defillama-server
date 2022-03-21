@@ -12,38 +12,38 @@ export const allRecordBreakdownVolumes = {
   uniswap: {
     v1: {
       ethereum: {
-        timestamp: 1645027200,
-        block: 14218089,
-        totalVolume: "2127707320.980734193145129932483345",
-        dailyVolume: "49589.84110162550159879261894159241",
+        timestamp: 1645023600,
+        block: 14217819,
+        totalVolume: "2127696983.045132809223030004686432",
+        dailyVolume: "1258.936928627583252808912047947814",
       },
     },
     v2: {
       ethereum: {
-        timestamp: 1645027200,
-        block: 14218089,
-        totalVolume: "425019397243.6855017253868542906458",
-        dailyVolume: "58904410.29186991824491184770167461",
+        timestamp: 1645023600,
+        block: 14217819,
+        totalVolume: "425001521737.0727713786506239574054",
+        dailyVolume: "9521618.610485435981394202398457781",
       },
     },
     v3: {
       ethereum: {
-        timestamp: 1645027200,
-        block: 14218089,
-        totalVolume: "422511601184.6327693936849176030965",
-        dailyVolume: "674229505.8649109976120475482180776",
+        timestamp: 1645023600,
+        block: 14217819,
+        totalVolume: "422465132206.3081345563570073280239",
+        dailyVolume: "71003671.37049335680406347539083853",
       },
       arbitrum: {
-        timestamp: 1645027200,
-        block: 6185669,
-        totalVolume: "7094779246.5165316958562373773995",
-        dailyVolume: "15779972.18419643531530829328315214",
+        timestamp: 1645023600,
+        block: 6182597,
+        totalVolume: "7093883640.002166696942385708300042",
+        dailyVolume: "1463372.179476419110855768783632116",
       },
       polygon: {
-        timestamp: 1645027200,
-        block: 25015091,
-        totalVolume: "3901880693.791262916811533171203546",
-        dailyVolume: "34111105.08521044371020479822045806",
+        timestamp: 1645023600,
+        block: 25013534,
+        totalVolume: "3899273650.370706964775900676410159",
+        dailyVolume: "2867960.011274075127023380566026418",
       },
     },
   },
@@ -106,5 +106,37 @@ export const allPrevRecordBreakdownVolumes = {
     unix: 1645020000,
     hourlyVolume: "134104165.336153771270850882646629",
     dailyVolume: "1248872457.862297563310042077039007",
+  },
+};
+
+export const allRecordSingleVolumes = {
+  traderjoe: {
+    total: {
+      avax: {
+        timestamp: 1647828000,
+        block: 12371301,
+        totalVolume: "66241700409.60645079510150980936258",
+        dailyVolume: "32773138.87140432438107655042352236",
+      },
+    },
+  },
+};
+
+export const allPrevRecordSingleVolumes = {
+  traderjoe: {
+    breakdown: {
+      total: {
+        avax: {
+          dailyVolume: "9267123.19252500278686359961028",
+          hourlyVolume: "4113165.22161239443301348812957",
+          totalVolume: "66241700409.60645079510150980936258",
+        },
+      },
+    },
+    totalVolume: "66241700409.60645079510150980936258",
+    id: 468,
+    unix: 1647824400,
+    hourlyVolume: "4113165.22161239443301348812957",
+    dailyVolume: "9267123.19252500278686359961028",
   },
 };
