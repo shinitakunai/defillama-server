@@ -7,7 +7,7 @@ import {
   allPrevRecordSingleVolumes,
 } from "../fixture";
 
-import { calcHourlyVolDif } from "./";
+import { calcHourlyVolDif, calcAllAdaptHourlyVolDif } from "./";
 
 describe("calcHourlyVolDif", () => {
   describe("calculates difference in hourly volume given current and previous hourly volumes", () => {
@@ -41,6 +41,42 @@ describe("calcHourlyVolDif", () => {
 
       expect(diffRes1).toEqual({
         avax: new BigNumber(0),
+      });
+    });
+  });
+});
+
+describe("calcAllAdaptHourlyVolDif", () => {
+  describe("calculates difference in hourly volume given current and previous hourly volumes for all modules", () => {
+    it("calculate hourly volumes difference correctly for multiple adapters", async () => {
+      const allModulesDiff = calcAllAdaptHourlyVolDif({
+        currVolumes: {
+          ...allRecordBreakdownVolumes,
+          ...allRecordSingleVolumes,
+        },
+        prevVolumes: {
+          ...allPrevRecordBreakdownVolumes,
+          ...allPrevRecordSingleVolumes,
+        },
+      });
+
+      expect(allModulesDiff).toEqual({
+        uniswap: {
+          v1: {
+            ethereum: new BigNumber(0),
+          },
+          v2: {
+            ethereum: new BigNumber(0),
+          },
+          v3: {
+            ethereum: new BigNumber(0),
+            arbitrum: new BigNumber(0),
+            polygon: new BigNumber(0),
+          },
+        },
+        traderjoe: {
+          total: { avax: new BigNumber(0) },
+        },
       });
     });
   });
